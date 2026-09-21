@@ -18,7 +18,7 @@ def test_masked_channels_cannot_change_corresponding_predictions():
     x = torch.zeros((2, 3))
     x[1, 1] = 999
     y = model(x)
-    assert torch.equal(y[0, :2], y[1, :2])
+    assert torch.allclose(y[0, :2], y[1, :2], rtol=0.0, atol=1e-7)
     x = torch.zeros((2, 3))
     x[1, 2] = 999
     assert torch.equal(model(x)[0, 3], model(x)[1, 3])

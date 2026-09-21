@@ -1,0 +1,144 @@
+{
+  "schema_version": "ca3-system-run-1.0",
+  "case": {
+    "id": "synthetic-contract-demo",
+    "mode": "SYNTHETIC",
+    "model": "no API call"
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "label": "Round 1",
+      "phase": "Seed triage",
+      "aliases": {
+        "communities": {"C04": "community-seed"},
+        "evidence": {"E04": "evidence-execute"}
+      },
+      "communities": [
+        {"id": "community-seed", "alias": "C04", "tier": "observed"}
+      ],
+      "backbone": {"community_ids": ["community-seed"], "edges": []},
+      "scheduled_coi": {"community_id": "community-seed"},
+      "ic_assessment": {"status": "unsupported"},
+      "frontiers": ["entry", "bridge"],
+      "denoising": {"withdrawn_count": 0},
+      "scope_request": {"kind": "extend_left"},
+      "lead": {
+        "recommended_action": "retrieve_bridge",
+        "assessment": "The late-stage seed is witnessed, but its precursor is outside the active scope.",
+        "gaps": ["entry", "bridge"]
+      },
+      "assistant_task": {
+        "task_id": "VT-01",
+        "question": "Retrieve a bounded precursor witness for the seed community.",
+        "evidence_ids": ["evidence-execute"]
+      },
+      "assistant": {
+        "verdict": "SUPPORTED",
+        "findings": "The bounded slice supports the local execution effect; entry remains unresolved."
+      },
+      "controller": {"action": "extend_left", "reason_code": "critical_frontier_open", "terminal": false},
+      "ledger_delta": {"event_id": "synthetic-ledger-001"}
+    },
+    {
+      "round": 1,
+      "label": "Round 2",
+      "phase": "Bridge recovery",
+      "aliases": {
+        "communities": {"C02": "community-bridge", "C03": "community-effect", "C04": "community-seed"},
+        "evidence": {"E02": "evidence-connect", "E03": "evidence-write", "E04": "evidence-execute"}
+      },
+      "communities": [
+        {"id": "community-bridge", "alias": "C02", "tier": "activated"},
+        {"id": "community-effect", "alias": "C03", "tier": "activated"},
+        {"id": "community-seed", "alias": "C04", "tier": "observed"}
+      ],
+      "backbone": {
+        "community_ids": ["community-bridge", "community-effect", "community-seed"],
+        "edges": [
+          {"source_id": "community-bridge", "target_id": "community-effect", "retrieval_only": false},
+          {"source_id": "community-effect", "target_id": "community-seed", "retrieval_only": false}
+        ]
+      },
+      "scheduled_coi": {"community_id": "community-bridge"},
+      "ic_assessment": {"status": "supported"},
+      "frontiers": ["entry"],
+      "denoising": {"withdrawn_count": 1},
+      "scope_request": {"kind": "extend_left"},
+      "lead": {
+        "recommended_action": "verify_entry",
+        "assessment": "The bridge and local effect are witnessed; the campaign entry is still outside scope.",
+        "gaps": ["entry"]
+      },
+      "assistant_task": {
+        "task_id": "VT-02",
+        "question": "Verify a temporally consistent entry-to-bridge witness.",
+        "evidence_ids": ["evidence-connect", "evidence-write"]
+      },
+      "assistant": {
+        "verdict": "SUPPORTED",
+        "findings": "The retrieved evidence supports an ordered bridge-to-effect sequence."
+      },
+      "controller": {"action": "extend_left", "reason_code": "entry_frontier_open", "terminal": false},
+      "ledger_delta": {"event_id": "synthetic-ledger-002"}
+    },
+    {
+      "round": 2,
+      "label": "Round 3",
+      "phase": "Entry verification",
+      "aliases": {
+        "communities": {"C01": "community-entry", "C02": "community-bridge", "C03": "community-effect", "C04": "community-seed"},
+        "evidence": {"E01": "evidence-ingress", "E02": "evidence-connect", "E03": "evidence-write", "E04": "evidence-execute"}
+      },
+      "communities": [
+        {"id": "community-entry", "alias": "C01", "tier": "activated"},
+        {"id": "community-bridge", "alias": "C02", "tier": "activated"},
+        {"id": "community-effect", "alias": "C03", "tier": "activated"},
+        {"id": "community-seed", "alias": "C04", "tier": "observed"}
+      ],
+      "backbone": {
+        "community_ids": ["community-entry", "community-bridge", "community-effect", "community-seed"],
+        "edges": [
+          {"source_id": "community-entry", "target_id": "community-bridge", "retrieval_only": true},
+          {"source_id": "community-bridge", "target_id": "community-effect", "retrieval_only": false},
+          {"source_id": "community-effect", "target_id": "community-seed", "retrieval_only": false}
+        ]
+      },
+      "scheduled_coi": {"community_id": "community-entry"},
+      "ic_assessment": {"status": "supported"},
+      "frontiers": [],
+      "denoising": {"withdrawn_count": 1},
+      "scope_request": {"kind": "none"},
+      "lead": {
+        "recommended_action": "terminate",
+        "assessment": "Entry, bridge, and effect are supported by an ordered witness chain.",
+        "gaps": []
+      },
+      "assistant_task": {
+        "task_id": "VT-03",
+        "question": "Verify the bounded entry witness and its temporal continuity.",
+        "evidence_ids": ["evidence-ingress", "evidence-connect", "evidence-write", "evidence-execute"]
+      },
+      "assistant": {
+        "verdict": "SUPPORTED",
+        "findings": "All cited events form a witnessed entry-to-seed sequence in the activated scope."
+      },
+      "controller": {"action": "terminate", "reason_code": "entry_boundary_resolved", "terminal": true},
+      "ledger_delta": {"event_id": "synthetic-ledger-003"}
+    }
+  ],
+  "attack_summary": {
+    "nodes": [
+      {"id": "external", "label": "External flow", "subtitle": "entry witness", "kind": "network"},
+      {"id": "service", "label": "Service", "subtitle": "process context", "kind": "process"},
+      {"id": "payload", "label": "Payload", "subtitle": "written object", "kind": "file"},
+      {"id": "shell", "label": "Shell", "subtitle": "execution effect", "kind": "process"}
+    ],
+    "edges": [
+      {"alias": "E01", "source": "external", "target": "service", "label": "RECVFROM", "stage": "ingress", "timestamp_ns": 1523020800000000000},
+      {"alias": "E02", "source": "service", "target": "payload", "label": "WRITE", "stage": "foothold", "timestamp_ns": 1523020860000000000},
+      {"alias": "E03", "source": "payload", "target": "shell", "label": "EXECUTE", "stage": "effect", "timestamp_ns": 1523020920000000000},
+      {"alias": "E04", "source": "shell", "target": "external", "label": "SENDTO", "stage": "callback", "timestamp_ns": 1523020980000000000}
+    ]
+  }
+}

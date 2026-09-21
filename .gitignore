@@ -34,6 +34,10 @@ tmp/
 *.pth
 *.ckpt
 
+# The browser contract ships one explicitly synthetic fixture.
+!system/static/data/
+!system/static/data/case-study.json
+
 # Keep protocol specifications but not unpublished result artifacts
 artifacts/*
 !artifacts/README.md
