@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+
+# Secrets and local configuration
+.env
+.env.*
+*.key
+config/
+configs/local*.toml
+configs/*secret*
+
+# Datasets, caches, and run outputs
+data/
+dataset/
+datasets/
+cache/
+caches/
+outputs/
+results/
+runs/
+logs/
+tmp/
+*.parquet
+*.arrow
+*.pt
+*.pth
+*.ckpt
+
+# Keep protocol specifications but not unpublished result artifacts
+artifacts/*
+!artifacts/README.md
+!artifacts/protocols/
+!artifacts/protocols/**
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

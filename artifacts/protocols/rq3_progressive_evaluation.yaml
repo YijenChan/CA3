@@ -1,0 +1,116 @@
+protocol_id: ca3-rq3-blind-historical-access-v1
+status: frozen_protocol_with_trajectory_manifest_export_pending
+recorded_on: 2026-09-21
+scope:
+  research_question: RQ3
+  task: progressive APT investigation under blind historical access
+  datasets:
+    - CADETS (E3)
+    - THEIA (E3)
+    - CADETS (E5)
+    - ClearScope (E5)
+
+windowing:
+  duration_minutes: 30
+  direction: backward
+  initial_window_rule: latest registered window containing a provisional seed associated with the campaign
+  expansion_action: extend_left activates exactly one immediately preceding window
+  depth_indexing:
+    initial_window_label: W1
+    initial_expansion_depth: 0
+    formula: "window Wj corresponds to expansion depth j-1"
+
+budgets:
+  reasoning_rounds_per_checkpoint: 8
+  reasoning_budget_reset: after a historical window is successfully activated
+  historical_expansion_budget:
+    rule: full registered sequence of available preceding windows for the trajectory
+    invariant: "B_exp >= max(k, d*)"
+    rationale: no registered trajectory is truncated before either the Fixed-k depth or its offline oracle depth
+  correction_note: "The earlier entry '12 windows/24 h' was inconsistent with 30-minute windows and is superseded. At 30 minutes per window, 24 h equals 48 expansions."
+
+trajectories:
+  definition: one fixed campaign, one fixed late-stage seed window, and the ordered sequence of preceding windows available to extend_left
+  eligibility:
+    - the Detector supplies at least one registered late-stage seed
+    - label-defined entry evidence occurs in an earlier available window
+  preregistered_fields:
+    - campaign ID
+    - seed entity
+    - initial window
+    - preceding-window sequence
+    - oracle depth
+  fixed_before_rq3_result_inspection: true
+  counts:
+    CADETS (E3): 3
+    THEIA (E3): 2
+    CADETS (E5): 2
+    ClearScope (E5): 2
+  llm_runs_per_trajectory: 5
+
+oracle:
+  entry_evidence: predefined label-derived entry entity or event for each registered campaign
+  valid_path: directed temporally ordered path from the predefined entry evidence to the fixed initial seed, using canonical entities and witnessed provenance relations available in the activated scope
+  oracle_depth: smallest expansion depth at which both the entry evidence and the valid entry-to-seed path are available
+  computed_from:
+    - ground-truth labels
+    - raw provenance
+  exposed_during_inference: false
+  deterministic_across_llm_runs: true
+  figure_trace:
+    dataset: THEIA (E3)
+    terminal_window: W94
+    oracle_depth_under_registered_indexing: 93
+    preceding_checkpoint_W93_is_insufficient: true
+
+policies:
+  Fixed-k:
+    k: 48
+    equivalent_lookback_hours: 24
+    shared_across_datasets: true
+    justification: all four datasets use the same 30-minute window duration
+    selection_data: disjoint development set
+    selection_rule: minimize mean absolute distance between k and the development oracle depths
+    runtime_rule: terminate after exactly k backward expansions without inspecting investigation state to choose the stopping depth
+  Recompute:
+    checkpoint_input: all evidence activated up to that checkpoint
+    rebuilds:
+      - FMG
+      - candidate and retained backbone
+      - Investigation Ledger
+      - reduced investigation state
+    reuses_committed_state_from_previous_checkpoint: false
+    stopping_controller: same Controller conditions as CA3
+  CA3:
+    state_reuse: incrementally updates and reuses the committed FMG, backbone, ledger, and reduced investigation state
+    stopping_controller: evidence-gated Controller
+
+fairness:
+  same_ordered_sequence_of_available_windows: true
+  policies_may_terminate_at_different_depths: true
+  same_raw_evidence_at_corresponding_depth: true
+  same_base_llm_and_prompts: true
+  same_reasoning_budget_per_checkpoint: 8
+  same_evidence_gates: true
+  same_controller_stopping_conditions_for_CA3_and_Recompute: true
+
+outcomes:
+  exact_stop: terminal_depth equals d*
+  early_stop: terminal_depth is less than d*
+  delayed_stop: terminal_depth is greater than d*
+  budget_exhaustion: counted as delayed stop
+  reconstruction_metrics:
+    - Node-Jac
+    - Edge-Jac
+  reconstruction_scope: terminal activated scope
+
+artifact_export_pending:
+  - trajectory manifest with campaign IDs, seed entities, initial windows, preceding-window sequences, d*, and realized B_exp
+  - development split and Fixed-k selection record
+  - per-checkpoint Controller traces for all five runs
+  - per-run terminal graphs and stopping classifications
+  - code commit, configuration paths, and checksums
+
+provenance:
+  source: experiment-assistant protocol summary plus author-approved correction of the inconsistent expansion-budget entry
+  note: The old local 1--2 hour pilot configurations are development records and do not define this paper protocol.

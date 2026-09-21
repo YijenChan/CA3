@@ -1,0 +1,103 @@
+[dataset]
+name = "DARPA_TC_E3_CADETS"
+cdm_version = 18
+raw_timestamp_timezone = "UTC"
+reference_window_timezone = "America/New_York"
+reference_window_utc_offset_hours = -4
+raw_dir = "data/E3_CADETS/cadets"
+label_dir = "data/labels/darpa/E3-CADETS"
+official_report = "data/docs/TC_Ground_Truth_Report_E3_Update.pdf"
+day_graph_range = [2, 13]
+
+[label_policy]
+primary = "orthrus_temporally_scoped"
+use_labels_for_training = false
+use_labels_for_benign_calibration = false
+use_locked_labels_for_model_selection = false
+global_uuid_is_positive = false
+deduplicate_by = "uuid"
+notes = "A UUID is positive only for evidence within its campaign window. Persistent objects outside that window are not globally malicious."
+
+[reference_split]
+source = "Orthrus official CADETS_E3 configuration"
+train_days = [3, 4, 5, 7, 8, 9, 10]
+validation_days = [2]
+test_days = [6, 11, 12, 13]
+unused_days = []
+
+[reference_graph_projection]
+source = "Orthrus rel2id"
+included_event_types = [
+  "EVENT_CONNECT",
+  "EVENT_EXECUTE",
+  "EVENT_OPEN",
+  "EVENT_READ",
+  "EVENT_RECVFROM",
+  "EVENT_RECVMSG",
+  "EVENT_SENDMSG",
+  "EVENT_SENDTO",
+  "EVENT_WRITE",
+  "EVENT_CLONE",
+]
+
+[[campaigns]]
+id = "nginx_backdoor_06"
+label_file = "node_Nginx_Backdoor_06.csv"
+reference_start_local = "2018-04-06 11:20:00"
+reference_end_local = "2018-04-06 12:09:00"
+start_utc = "2018-04-06T15:20:00Z"
+end_utc = "2018-04-06T16:09:00Z"
+
+[[campaigns]]
+id = "nginx_backdoor_12"
+label_file = "node_Nginx_Backdoor_12.csv"
+reference_start_local = "2018-04-12 13:59:00"
+reference_end_local = "2018-04-12 14:39:00"
+start_utc = "2018-04-12T17:59:00Z"
+end_utc = "2018-04-12T18:39:00Z"
+
+[[campaigns]]
+id = "nginx_backdoor_13"
+label_file = "node_Nginx_Backdoor_13.csv"
+reference_start_local = "2018-04-13 09:03:00"
+reference_end_local = "2018-04-13 09:16:00"
+start_utc = "2018-04-13T13:03:00Z"
+end_utc = "2018-04-13T13:16:00Z"
+
+[ca3_split_policy]
+status = "frozen"
+version = 1
+frozen_utc = "2026-08-05T00:00:00Z"
+logical_day_timezone = "America/New_York"
+rule = "Strict chronological development: fit and calibration precede the first attack; April 6 is the only labeled development attack; April 12-13 labels are locked."
+
+[ca3_primary_split]
+fit_days = [2, 3, 4]
+calibration_days = [5]
+development_days = [6]
+context_days = [7, 8, 9, 10, 11]
+locked_test_days = [12, 13]
+
+[ca3_primary_split.permissions]
+fit = "Model fitting without attack labels."
+calibration = "Normal-only threshold and resource calibration; no attack labels."
+development = "The April 6 labels may tune methodology and hyperparameters."
+context = "Causal online state may advance, but parameters and thresholds remain frozen; no labels are used."
+locked_test = "April 12-13 labels remain inaccessible until the final registered evaluation."
+
+[ca3_primary_split.feature_policy]
+allow_raw_uuid_as_model_feature = false
+allow_global_node_malicious_label = false
+allow_future_events_in_features = false
+allow_cross_boundary_windows = false
+reset_model_parameters_after_development = false
+notes = "Stable UUIDs remain evidence keys only. Features and windows are causal and end at the decision timestamp."
+
+[ca3_primary_split.metric_policy]
+primary_unit = "temporally_scoped_evidence_and_hypothesis"
+report_global_uuid_node_metric = "compatibility_only"
+unlabeled_context_alerts = "unverified_alerts_not_false_positives"
+full_label_denominator = 72
+orthrus_compatible_denominator = 68
+locked_campaign_unique_uuid_denominator = 64
+locked_orthrus_projected_denominator = 60

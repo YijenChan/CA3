@@ -1,0 +1,19 @@
+{
+  "schema_version": "cp7a-1",
+  "message_type": "lead_proposal",
+  "investigation_id": "inv-e3-cadets-001",
+  "round": 1,
+  "input_snapshot_hash": "2222222222222222",
+  "actions": [
+    {
+      "action_id": "action-001",
+      "action_type": "request_bridge",
+      "reason_code": "critical-connectivity-gap",
+      "community_ids": ["C06", "C09"],
+      "evidence_ids": ["edge-raw-01", "edge-raw-02"],
+      "gap_id": "gap-connect-01",
+      "attack_technique_ids": []
+    }
+  ],
+  "limitations": []
+}

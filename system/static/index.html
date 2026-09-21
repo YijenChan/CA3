@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CA3 · Progressive APT Investigation</title>
+    <meta
+      name="description"
+      content="Local evidence-gated CA3 investigation system"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-mark" aria-hidden="true">C3</div>
+        <div class="brand-copy">
+          <div class="eyebrow">CA3 · EVIDENCE-GATED FORENSICS</div>
+          <h1>Progressive APT Investigation</h1>
+        </div>
+        <div class="case-chip">
+          <span>PUBLIC DEMO</span>
+          <code id="case-id">loading…</code>
+        </div>
+        <div class="top-stats">
+          <div><small>MODE</small><strong id="run-mode">—</strong></div>
+          <div><small>IC STATE</small><strong id="ic-state">—</strong></div>
+          <div class="status-stat"><small>CONTROL</small><strong id="control-status">—</strong></div>
+        </div>
+      </header>
+
+      <main>
+        <section class="panel fmg-panel">
+          <div class="panel-heading fmg-heading">
+            <div>
+              <div class="section-kicker">01 · FORENSIC MEMORY GRAPH</div>
+              <h2>Observed evidence evolves; hypotheses stay in the ledger</h2>
+            </div>
+            <div class="round-switcher" id="round-switcher" aria-label="Investigation round"></div>
+          </div>
+
+          <div class="state-rail" id="state-rail"></div>
+
+          <div class="fmg-workspace">
+            <div class="graph-card">
+              <div class="card-label-row">
+                <span class="mini-kicker">FMG SNAPSHOT</span>
+                <span class="badge soft" id="community-count">—</span>
+              </div>
+              <canvas id="fmg-canvas" aria-label="Forensic memory graph"></canvas>
+              <div class="graph-legend">
+                <span><i class="dot causal"></i>causal witness</span>
+                <span><i class="dot stitch"></i>temporal stitch · retrieval only</span>
+                <span><i class="dot coi"></i>scheduled COI</span>
+              </div>
+            </div>
+
+            <div class="operation-card">
+              <div class="card-label-row">
+                <span class="mini-kicker">COI + REFINEMENT</span>
+                <span class="badge lavender" id="phase-badge">—</span>
+              </div>
+              <div class="coi-block">
+                <small>SCHEDULED COMMUNITY</small>
+                <strong id="coi-alias">—</strong>
+                <code id="coi-id">—</code>
+              </div>
+              <div class="operation-grid">
+                <div><small>BRIDGE</small><strong id="bridge-status">—</strong></div>
+                <div><small>DENOISE</small><strong id="denoise-status">—</strong></div>
+                <div><small>ENTRY</small><strong id="entry-status">—</strong></div>
+                <div><small>FRONTIERS</small><strong id="frontier-status">—</strong></div>
+              </div>
+              <div class="scope-callout" id="scope-callout">—</div>
+            </div>
+
+            <div class="backbone-card">
+              <div class="card-label-row">
+                <span class="mini-kicker">CONTROLLER VIEW</span>
+                <span class="badge mint" id="backbone-status">PROVISIONAL</span>
+              </div>
+              <div class="backbone-path" id="backbone-path"></div>
+              <div class="gate-list" id="gate-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="lower-grid">
+          <article class="panel collaboration-panel">
+            <div class="panel-heading compact-heading">
+              <div>
+                <div class="section-kicker">02 · HIERARCHICAL INVESTIGATION</div>
+                <h2>Lead proposes · Assistant verifies · Controller commits</h2>
+              </div>
+              <span class="badge live">LIVE AGENT TRACE · T=0</span>
+            </div>
+
+            <div class="agent-flow">
+              <div class="agent-column lead-column">
+                <div class="agent-title">
+                  <span class="agent-orb lead">L</span>
+                  <div><small>GLOBAL REASONING</small><strong>Lead Investigator</strong></div>
+                </div>
+                <div class="prompt-card blue">
+                  <small>CAMPAIGN SNAPSHOT + PROMPT</small>
+                  <p id="lead-input">—</p>
+                </div>
+                <div class="response-card">
+                  <div class="response-head"><small>VALIDATED PROPOSAL</small><span id="lead-action">—</span></div>
+                  <p id="lead-assessment">—</p>
+                  <div class="inline-note" id="lead-gap">—</div>
+                </div>
+              </div>
+
+              <div class="message-lane" aria-hidden="true">
+                <div class="lane-tag">typed task</div>
+                <div class="lane-line"></div>
+                <div class="lane-tag return">verdict</div>
+              </div>
+
+              <div class="agent-column assistant-column">
+                <div class="agent-title">
+                  <span class="agent-orb assistant">A</span>
+                  <div><small>BOUNDED FORENSICS</small><strong>Assistant</strong></div>
+                </div>
+                <div class="prompt-card violet">
+                  <small id="task-id">TASK · NOT REQUESTED</small>
+                  <p id="assistant-question">No bounded verification task in this round.</p>
+                </div>
+                <div class="evidence-row" id="evidence-row"></div>
+                <div class="response-card assistant-response">
+                  <div class="response-head"><small>VERDICT</small><span id="assistant-verdict">—</span></div>
+                  <p id="assistant-findings">—</p>
+                </div>
+              </div>
+
+              <div class="controller-column">
+                <div class="agent-title">
+                  <span class="agent-orb controller">✓</span>
+                  <div><small>DETERMINISTIC GATE</small><strong>Controller</strong></div>
+                </div>
+                <div class="controller-action">
+                  <small>COMMITTED ACTION</small>
+                  <strong id="controller-action">—</strong>
+                  <p id="controller-reason">—</p>
+                </div>
+                <div class="controller-checks" id="controller-checks"></div>
+                <div class="ledger-strip">
+                  <small>LEDGER APPEND</small>
+                  <code id="ledger-event">—</code>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <aside class="panel summary-panel">
+            <div class="panel-heading compact-heading">
+              <div>
+                <div class="section-kicker">03 · SYSTEM OUTPUT</div>
+                <h2>Attack summary graph</h2>
+              </div>
+              <span class="badge mint" id="summary-status">PENDING</span>
+            </div>
+            <canvas id="attack-canvas" aria-label="Attack summary graph"></canvas>
+            <div class="attack-evidence" id="attack-evidence"></div>
+            <div class="summary-footer">
+              <span>4 raw witnesses</span>
+              <span>3 admitted FMG edges</span>
+              <span>0 open critical frontiers</span>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

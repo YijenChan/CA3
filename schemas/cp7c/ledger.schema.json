@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ca3.local/schemas/cp7c/ledger.schema.json",
+  "title": "CA3 CP7-C ledger event or reduced snapshot",
+  "oneOf": [
+    {"$ref": "#/$defs/ledger_event"},
+    {"$ref": "#/$defs/snapshot"}
+  ],
+  "$defs": {
+    "ledger_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["offset", "event_id", "event_type", "actor", "round", "input_snapshot_hash", "payload"],
+      "properties": {
+        "offset": {"type": "integer", "minimum": 0},
+        "event_id": {"type": "string", "pattern": "^ledger-[a-f0-9]{24}$"},
+        "event_type": {"enum": ["gap_opened", "bridge_query_issued", "bridge_candidate_retrieved", "bridge_candidate_rejected", "bridge_candidate_accepted", "stop_recorded"]},
+        "actor": {"enum": ["controller", "retriever", "assistant"]},
+        "round": {"type": "integer", "minimum": 0},
+        "input_snapshot_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "payload": {"type": "object"}
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ledger_offset", "backbone_community_ids", "backbone_edge_ids", "open_gaps", "retrieved_candidates", "next_action", "action_reason_gap_id", "snapshot_hash"],
+      "properties": {
+        "ledger_offset": {"type": "integer", "minimum": -1},
+        "backbone_community_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "backbone_edge_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "open_gaps": {"type": "object"},
+        "retrieved_candidates": {"type": "object"},
+        "next_action": {"enum": ["inspect_frontier", "retrieve_bridge", "verify_claim", "stop_complete", "stop_limited"]},
+        "action_reason_gap_id": {"type": ["string", "null"]},
+        "snapshot_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  }
+}

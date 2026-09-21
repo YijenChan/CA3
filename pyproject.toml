@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ca3"
+version = "0.1.0"
+description = "Progressive APT investigation over a forensic memory graph"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = ["numpy>=2,<3", "orjson>=3.10", "pyarrow>=17,<22", "scikit-learn>=1.5,<2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "ruff>=0.9", "jsonschema>=4.26,<5"]
+graph = ["torch>=2.5,<3", "igraph>=0.11,<1", "leidenalg>=0.10,<1"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

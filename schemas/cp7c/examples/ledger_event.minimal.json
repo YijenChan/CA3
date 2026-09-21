@@ -1,0 +1,13 @@
+{
+  "offset": 0,
+  "event_id": "ledger-0123456789abcdef01234567",
+  "event_type": "gap_opened",
+  "actor": "controller",
+  "round": 0,
+  "input_snapshot_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "payload": {
+    "gap_id": "gap-001",
+    "gap_type": "connectivity",
+    "status": "open"
+  }
+}

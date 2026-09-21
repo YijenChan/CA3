@@ -1,0 +1,50 @@
+schema_version = 1
+default_direction = "structural"
+
+# Direction describes conservative information flow for investigation traversal.
+# Raw subject/predicate roles are always retained and remain authoritative.
+[directions]
+object_to_subject = [
+  "EVENT_ACCEPT",
+  "EVENT_CHECK_FILE_ATTRIBUTES",
+  "EVENT_EXECUTE",
+  "EVENT_LOADLIBRARY",
+  "EVENT_MMAP",
+  "EVENT_OPEN",
+  "EVENT_READ",
+  "EVENT_READ_SOCKET_PARAMS",
+  "EVENT_RECVFROM",
+  "EVENT_RECVMSG",
+]
+subject_to_object = [
+  "EVENT_ADD_OBJECT_ATTRIBUTE",
+  "EVENT_BIND",
+  "EVENT_CONNECT",
+  "EVENT_CREATE_OBJECT",
+  "EVENT_LINK",
+  "EVENT_MODIFY_FILE_ATTRIBUTES",
+  "EVENT_RENAME",
+  "EVENT_SENDMSG",
+  "EVENT_SENDTO",
+  "EVENT_TRUNCATE",
+  "EVENT_UNLINK",
+  "EVENT_WRITE",
+]
+process_relation = [
+  "EVENT_CHANGE_PRINCIPAL",
+  "EVENT_CLONE",
+  "EVENT_FORK",
+  "EVENT_LOGIN",
+  "EVENT_MODIFY_PROCESS",
+  "EVENT_SIGNAL",
+]
+structural = [
+  "EVENT_CLOSE",
+  "EVENT_EXIT",
+  "EVENT_FCNTL",
+  "EVENT_FLOWS_TO",
+  "EVENT_LSEEK",
+  "EVENT_MPROTECT",
+  "EVENT_OTHER",
+]
+

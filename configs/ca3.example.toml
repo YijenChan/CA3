@@ -1,0 +1,31 @@
+[collector]
+interval_seconds = 1800
+node_budget = 3000
+minimum_interval_seconds = 1
+leiden_resolution = 1.0
+seed = 7
+
+[detector]
+hidden_dimension = 64
+epochs = 4
+batch_size = 8192
+learning_rate = 0.001
+weight_decay = 0.0001
+residual_minimum_samples = 128
+candidate_percentile = 0.95
+anchor_percentile = 0.99
+topology_expansion_ratio = 0.075
+context_cap = 256
+edge_budget = 40
+attribution_budget = 5
+
+[investigation]
+reasoning_round_budget = 8
+repair_budget = 1
+window_duration_minutes = 30
+
+[agent]
+# Set this to the exact model identifier used by the experiment being reproduced.
+model = "gpt-5.5-2026-04-23"
+temperature = 0.0
+max_output_tokens = 1024

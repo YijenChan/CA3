@@ -1,0 +1,48 @@
+{
+  "schema_version": "cp7a-1",
+  "fmg_id": "fmg-e3-cadets-dev",
+  "evidence_manifest_hash": "0123456789abcdef",
+  "communities": [
+    {
+      "community_id": "C06",
+      "pg_ids": ["pg-006"],
+      "start_ns": 1000,
+      "end_ns": 2000,
+      "hosts": ["cadets"],
+      "entity_types": ["PROCESS", "NETFLOW"],
+      "boundary_entity_ids": ["entity-xdev"],
+      "seed_ids": ["seed-006"],
+      "evidence_refs": [{"evidence_id": "edge-raw-01", "source_kind": "edge"}],
+      "archive_refs": ["archive-c06"]
+    },
+    {
+      "community_id": "C09",
+      "pg_ids": ["pg-009"],
+      "start_ns": 2100,
+      "end_ns": 3000,
+      "hosts": ["cadets"],
+      "entity_types": ["PROCESS", "FILE"],
+      "boundary_entity_ids": ["entity-xdev"],
+      "seed_ids": ["seed-009"],
+      "evidence_refs": [{"evidence_id": "edge-raw-02", "source_kind": "edge"}],
+      "archive_refs": ["archive-c09"]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "fmg-edge-01",
+      "src": "C06",
+      "dst": "C09",
+      "edge_type": "entity_lineage",
+      "evidence_semantics": "causal_event",
+      "time_relation": "before",
+      "witness_entity_ids": ["entity-xdev"],
+      "witness_refs": [
+        {"evidence_id": "edge-raw-01", "source_kind": "edge"},
+        {"evidence_id": "edge-raw-02", "source_kind": "edge"}
+      ],
+      "rule_version": "entity-lineage-v1",
+      "construction_run_id": "cp7b-dryrun-01"
+    }
+  ]
+}

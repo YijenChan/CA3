@@ -1,0 +1,12 @@
+{
+  "schema_version": "cp7a-1",
+  "message_type": "assistant_verification",
+  "investigation_id": "inv-e3-cadets-001",
+  "round": 1,
+  "task_id": "verify-001",
+  "verdict": "supported",
+  "supporting_evidence_ids": ["edge-raw-01", "edge-raw-02"],
+  "conflicting_evidence_ids": [],
+  "scope_complete": true,
+  "limitations": []
+}

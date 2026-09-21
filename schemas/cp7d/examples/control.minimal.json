@@ -1,0 +1,14 @@
+{
+  "schema_version": "cp7d-1",
+  "scenario_id": "supported_closed",
+  "ic_status": "supported",
+  "frontier": [],
+  "decision": {
+    "action": "stop_complete",
+    "reason_code": "ic_supported_and_frontier_closed",
+    "frontier_item_id": null,
+    "terminal": true
+  },
+  "expected_action": "stop_complete",
+  "passed": true
+}

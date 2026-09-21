@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ca3.local/schemas/cp7a/fmg.schema.json",
+  "title": "CA3 evidence-only Forensic Memory Graph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "fmg_id", "communities", "edges", "evidence_manifest_hash"],
+  "properties": {
+    "schema_version": {"const": "cp7a-1"},
+    "fmg_id": {"type": "string", "minLength": 1},
+    "evidence_manifest_hash": {"type": "string", "minLength": 16},
+    "communities": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/community"}
+    },
+    "edges": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/witnessed_edge"}
+    }
+  },
+  "$defs": {
+    "evidence_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "source_kind"],
+      "properties": {
+        "evidence_id": {"type": "string", "minLength": 1},
+        "source_kind": {"enum": ["event", "edge", "subchain", "seed", "archive", "node_definition"]}
+      }
+    },
+    "community": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["community_id", "pg_ids", "start_ns", "end_ns", "hosts", "seed_ids", "evidence_refs"],
+      "properties": {
+        "community_id": {"type": "string", "minLength": 1},
+        "pg_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "start_ns": {"type": "integer", "minimum": 0},
+        "end_ns": {"type": "integer", "minimum": 0},
+        "hosts": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "entity_types": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "boundary_entity_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "seed_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "evidence_refs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence_ref"}},
+        "archive_refs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "witnessed_edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["edge_id", "src", "dst", "edge_type", "evidence_semantics", "witness_refs", "rule_version", "construction_run_id"],
+      "properties": {
+        "edge_id": {"type": "string", "minLength": 1},
+        "src": {"type": "string", "minLength": 1},
+        "dst": {"type": "string", "minLength": 1},
+        "edge_type": {"enum": ["split_continuation", "entity_continuation", "entity_lineage", "provenance_reachability", "cross_host_flow"]},
+        "evidence_semantics": {"enum": ["causal_event", "identity_continuity"]},
+        "time_relation": {"enum": ["before", "overlaps", "continues"]},
+        "witness_entity_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "witness_refs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence_ref"}},
+        "rule_version": {"type": "string", "minLength": 1},
+        "construction_run_id": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

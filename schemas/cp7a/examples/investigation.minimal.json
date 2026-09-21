@@ -1,0 +1,45 @@
+{
+  "schema_version": "cp7a-1",
+  "investigation_id": "inv-e3-cadets-001",
+  "ledger": [
+    {
+      "offset": 0,
+      "event_id": "event-000",
+      "event_type": "gap_opened",
+      "round": 0,
+      "actor": "controller",
+      "input_snapshot_hash": "0000000000000000",
+      "payload_hash": "1111111111111111",
+      "gap": {
+        "gap_id": "gap-connect-01",
+        "gap_type": "connectivity",
+        "critical": true,
+        "status": "open",
+        "reason_code": "unwitnessed-transition",
+        "endpoint_community_ids": ["C06", "C09"],
+        "required_evidence_types": ["directed-provenance-path"]
+      },
+      "reason_code": "unwitnessed-transition"
+    }
+  ],
+  "snapshot": {
+    "ledger_offset": 0,
+    "backbone_community_ids": ["C06", "C09"],
+    "backbone_edge_ids": [],
+    "claims": [],
+    "open_gaps": [
+      {
+        "gap_id": "gap-connect-01",
+        "gap_type": "connectivity",
+        "critical": true,
+        "status": "open",
+        "reason_code": "unwitnessed-transition",
+        "endpoint_community_ids": ["C06", "C09"],
+        "required_evidence_types": ["directed-provenance-path"]
+      }
+    ],
+    "next_action": "retrieve_bridge",
+    "action_reason_gap_id": "gap-connect-01",
+    "snapshot_hash": "2222222222222222"
+  }
+}

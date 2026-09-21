@@ -1,0 +1,92 @@
+protocol_id: ca3-rq2-canonical-evaluation-v1
+status: frozen_from_executed_protocol
+recorded_on: 2026-09-21
+scope:
+  research_question: RQ2
+  metrics:
+    - Node-Jac
+    - Edge-Jac
+  methods:
+    - FLASH
+    - KAIROS
+    - ORTHRUS
+    - CA3
+
+ground_truth:
+  label_source: ORTHRUS fine-grained labels
+  campaign_boundaries: fixed attack scenarios and evidence-time intervals supplied by the dataset/label files
+  prediction_independent: true
+  node_set:
+    rule: only attack-labeled canonical entity instances
+    support_entity_rule: included only when explicitly identified as attack-related by the ground-truth labels
+    prohibited_rule: entities recovered solely by an evaluated method are never added to the ground-truth graph
+  edge_set:
+    rule: all directed, typed provenance-graph edges whose endpoints are both in the ground-truth node set and whose timestamps fall within the predefined campaign interval
+    deduplicate_canonical_edges: true
+
+canonicalization:
+  node:
+    identity: [host, raw_entity_id_or_uuid]
+    semantics: a concrete entity instance in the original provenance graph
+  edge:
+    identity: [canonical_source, canonical_relation_type, canonical_target]
+    directed: true
+    typed: true
+    timestamp_in_equality: false
+    deduplicate_identical_tuples: true
+  relation_taxonomy:
+    rule: original provenance event types are normalized to one fixed shared taxonomy
+    fixed_before_evaluation: true
+    shared_by_all_methods: true
+
+campaign_matching:
+  eligibility:
+    rule: predicted and ground-truth evidence-time intervals have non-empty overlap
+    timestamp_use: eligibility only; timestamps are excluded from canonical node and edge equality
+  assignment:
+    type: maximum-weight one-to-one bipartite matching
+    objective: maximize the total canonical-node intersection across assigned pairs
+    pair_weight: cardinality of the canonical-node intersection
+    actually_implemented: true
+  tie_breaking:
+    - larger temporal overlap
+    - stable campaign and prediction identifiers
+    edge_jaccard_used_for_tie_breaking: false
+  unmatched:
+    predicted_graph_score: 0
+    ground_truth_graph_score: 0
+
+metric_computation:
+  node_jaccard:
+    set: canonical nodes
+    formula: "|V_pred intersect V_gt| / |V_pred union V_gt|"
+  edge_jaccard:
+    set: deduplicated directed typed canonical edges
+    formula: "|E_pred intersect E_gt| / |E_pred union E_gt|"
+  within_run:
+    rule: macro-average over all matched pairs and unmatched predicted or ground-truth graphs
+    unmatched_item_score: 0
+  across_runs:
+    rule: perform matching and metric computation independently for each run, then average the run-level metrics
+
+fairness:
+  common_ground_truth_protocol: true
+  common_canonicalization_script: true
+  common_matching_script: true
+  common_metric_script: true
+  applies_to:
+    - FLASH
+    - KAIROS
+    - ORTHRUS
+    - CA3
+
+artifact_export_pending:
+  - shared relation-taxonomy mapping file
+  - per-dataset campaign identifiers and evidence-time boundaries
+  - canonicalization, matching, and metric script paths
+  - code commit and file checksums
+  - per-run prediction-to-campaign assignments and metric records
+
+provenance:
+  source: protocol answers supplied by the experiment assistant
+  note: This file records the reported executed protocol; pending artifact paths and hashes are deliberately not inferred.

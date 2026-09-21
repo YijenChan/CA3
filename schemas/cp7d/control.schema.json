@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ca3.local/schemas/cp7d/control.schema.json",
+  "title": "CA3 CP7-D frontier-control scenario result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "scenario_id", "ic_status", "frontier", "decision", "expected_action", "passed"],
+  "properties": {
+    "schema_version": {"const": "cp7d-1"},
+    "scenario_id": {"type": "string", "minLength": 1},
+    "ic_status": {"enum": ["absent", "attempted", "probable", "supported", "conflicted"]},
+    "frontier": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item_id", "gap_type", "critical", "status", "reason_code", "direction"],
+        "properties": {
+          "item_id": {"type": "string"},
+          "gap_type": {"enum": ["evidence_integrity", "connectivity", "entry", "stage_constraint", "left_time", "right_time", "host_scope", "competition"]},
+          "critical": {"type": "boolean"},
+          "status": {"enum": ["open", "closed", "blocked"]},
+          "reason_code": {"type": "string"},
+          "direction": {"enum": ["left", "right", "host", "none"]}
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "reason_code", "frontier_item_id", "terminal"],
+      "properties": {
+        "action": {"enum": ["verify_claim", "retrieve_bridge", "extend_left", "extend_right", "extend_host", "stop_complete", "stop_limited"]},
+        "reason_code": {"type": "string"},
+        "frontier_item_id": {"type": ["string", "null"]},
+        "terminal": {"type": "boolean"}
+      }
+    },
+    "expected_action": {"type": "string"},
+    "passed": {"type": "boolean"}
+  }
+}
+
