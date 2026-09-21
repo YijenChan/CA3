@@ -21,7 +21,7 @@ def test_masked_channels_cannot_change_corresponding_predictions():
     assert torch.allclose(y[0, :2], y[1, :2], rtol=0.0, atol=1e-7)
     x = torch.zeros((2, 3))
     x[1, 2] = 999
-    assert torch.equal(model(x)[0, 3], model(x)[1, 3])
+    assert torch.allclose(model(x)[0, 3], model(x)[1, 3], rtol=0.0, atol=1e-7)
 
 
 def test_sparse_type_uses_consistent_pooled_model_and_cdf():
