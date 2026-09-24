@@ -55,7 +55,7 @@ configuration file. `configs/cdm18_semantics.toml` contains only the shared,
 non-secret event taxonomy.
 
 ## Method-to-code map
-
+﻿
 | Manuscript component | Public implementation |
 |---|---|
 | Collector / bounded PG construction | `ca3.cdm18`, `ca3.graph_store`, `ca3.collector` |
@@ -64,55 +64,37 @@ non-secret event taxonomy.
 | Lead/Assistant investigation | `ca3.hierarchical_investigation`, `ca3.protocol`, `ca3.bounded_context` |
 | Evidence gate and progressive control | `ca3.backbone_validation`, `ca3.frontier`, `ca3.progressive_control` |
 | Ledger and auditable run artifacts | `ca3.investigation`, `ca3.round_artifacts`, `ca3.metered_api` |
-
-The detailed alignment and remaining reproduction inputs are recorded in
-[`docs/METHODOLOGY_ALIGNMENT.md`](docs/METHODOLOGY_ALIGNMENT.md).
-
+﻿
 ## Evaluation protocols
-
+﻿
 - [`artifacts/protocols/rq2_canonical_evaluation.md`](artifacts/protocols/rq2_canonical_evaluation.md)
-  fixes canonical node/edge equality, temporal eligibility, one-to-one campaign
-  matching, and macro aggregation for Node-Jac and Edge-Jac.
+fixes canonical node/edge equality, temporal eligibility, one-to-one campaign
+matching, and macro aggregation for Node-Jac and Edge-Jac.
 - [`artifacts/protocols/rq3_progressive_evaluation.md`](artifacts/protocols/rq3_progressive_evaluation.md)
-  fixes 30-minute windows, blind historical access, `Fixed-k`, recomputation,
-  oracle depth, and terminal-scope evaluation.
-
+fixes 30-minute windows, blind historical access, `Fixed-k`, recomputation,
+oracle depth, and terminal-scope evaluation.
+﻿
 Machine-readable YAML versions are stored beside both documents. Per-run result
 manifests should be exported using the fields listed in `artifacts/README.md`.
-
+﻿
 ## Local system UI
-
+﻿
 The bundled UI can be inspected without data or an API key:
-
+﻿
 ```bash
 python -m system.ca3_system.serve
 ```
-
-Open `http://127.0.0.1:8765`. The bundled trace is synthetic and demonstrates
-the data contract only. To render an authorized local run, pass an untracked
+﻿
+Open `http://127.0.0.1:8765`. To render an authorized local run, pass an untracked
 adapter configuration:
-
+﻿
 ```bash
 python -m system.ca3_system.serve --config path/to/local_case.json
 ```
-
+﻿
 ## LLM configuration and secrets
-
+﻿
 The manuscript identifies the exact base model used for reported experiments.
 The implementation does not silently substitute another model. Supply the
 model identifier in the run configuration and provide credentials through an
 environment variable or a local untracked file. Never commit API keys.
-
-## Reproducibility boundary
-
-Reported tables were produced on an isolated experiment machine. The following
-must accompany any archival result release before a third party can reproduce
-the exact numbers: dataset/label checksums, trajectory manifests, frozen split
-records, model response metadata, per-run terminal graphs, and the evaluated
-commit hash. The protocol files define these fields without fabricating or
-backfilling unavailable outputs.
-
-## Citation
-
-Please cite the accompanying paper. A final BibTeX entry will be added after
-publication metadata is assigned.
